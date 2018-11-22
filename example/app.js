@@ -3,7 +3,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import {Treebeard, decorators} from '../src/index';
+import { Treebeard, decorators } from '../src/index';
 import styled from '@emotion/styled';
 
 
@@ -18,15 +18,15 @@ const Div = styled('Div', {
 const HELP_MSG = 'Select A Node To See Its Data Structure Here...';
 
 // Example: Customising The Header Decorator To Include Icons
-decorators.Header = ({style, node}) => {
+decorators.Header = ({ style, node }) => {
     const iconType = node.children ? 'folder' : 'file-text';
     const iconClass = `fa fa-${iconType}`;
-    const iconStyle = {marginRight: '5px'};
+    const iconStyle = { marginRight: '5px' };
 
     return (
         <Div style={style.base}>
             <Div style={style.title}>
-                <i className={iconClass} style={iconStyle}/>
+                <i className={iconClass} style={iconStyle} />
 
                 {node.name}
             </Div>
@@ -54,58 +54,67 @@ class DemoTree extends React.Component {
     constructor() {
         super();
 
-        this.state = {data};
+        this.state = { data };
         this.onToggle = this.onToggle.bind(this);
+        this.onArrowClick = this.onArrowClick.bind(this);
+
     }
 
-    onToggle(node, toggled) {
-        const {cursor} = this.state;
+    onToggle(node) {
+        const { cursor } = this.state;
 
         if (cursor) {
             cursor.active = false;
         }
 
         node.active = true;
+
+        this.setState({ cursor: node });
+    }
+
+    onArrowClick(node, toggled) {
+
         if (node.children) {
             node.toggled = toggled;
         }
 
-        this.setState({cursor: node});
+        this.setState({ toggled: toggled });
     }
 
     onFilterMouseUp(e) {
         const filter = e.target.value.trim();
         if (!filter) {
-            return this.setState({data});
+            return this.setState({ data });
         }
         var filtered = filters.filterTree(data, filter);
         filtered = filters.expandFilteredNodes(filtered, filter);
-        this.setState({data: filtered});
+        this.setState({ data: filtered });
     }
 
     render() {
-        const {data: stateData, cursor} = this.state;
+        const { data: stateData, cursor } = this.state;
 
         return (
             <Div>
                 <Div style={styles.searchBox}>
                     <Div className="input-group">
                         <span className="input-group-addon">
-                          <i className="fa fa-search"/>
+                            <i className="fa fa-search" />
                         </span>
                         <input className="form-control"
-                               onKeyUp={this.onFilterMouseUp.bind(this)}
-                               placeholder="Search the tree..."
-                               type="text"/>
+                            onKeyUp={this.onFilterMouseUp.bind(this)}
+                            placeholder="Search the tree..."
+                            type="text" />
                     </Div>
                 </Div>
                 <Div style={styles.component}>
                     <Treebeard data={stateData}
-                               decorators={decorators}
-                               onToggle={this.onToggle}/>
+                        decorators={decorators}
+                        onToggle={this.onToggle}
+                        onArrowClick={this.onArrowClick} />
                 </Div>
                 <Div style={styles.component}>
-                    <NodeViewer node={cursor}/>
+                    <NodeViewer node={cursor} />
                 </Div>
             </Div>
         );
@@ -113,4 +122,4 @@ class DemoTree extends React.Component {
 }
 
 const content = document.getElementById('content');
-ReactDOM.render(<DemoTree/>, content);
+ReactDOM.render(<DemoTree />, content);

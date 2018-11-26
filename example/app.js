@@ -4,33 +4,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import { Treebeard, decorators } from '../src/index';
-import styled from '@emotion/styled';
-
 
 import data from './data';
 import styles from './styles';
 import * as filters from './filter';
 
-const Div = styled('Div', {
-    shouldForwardProp: prop => ['className', 'children'].indexOf(prop) !== -1
-})(({ style }) => style);
-
 const HELP_MSG = 'Select A Node To See Its Data Structure Here...';
 
 // Example: Customising The Header Decorator To Include Icons
-decorators.Header = ({ style, node }) => {
+decorators.Header = ({ style, node, onDoubleClick, onClick }) => {
     const iconType = node.children ? 'folder' : 'file-text';
     const iconClass = `fa fa-${iconType}`;
     const iconStyle = { marginRight: '5px' };
 
     return (
-        <Div style={style.base}>
-            <Div style={style.title}>
+        <div style={style.base} onDoubleClick={onDoubleClick} onClick={onClick}>
+            <div style={style.title}>
                 <i className={iconClass} style={iconStyle} />
-
                 {node.name}
-            </Div>
-        </Div>
+            </div>
+        </div>
     );
 };
 
@@ -43,7 +36,7 @@ class NodeViewer extends React.Component {
             json = HELP_MSG;
         }
 
-        return <Div style={style.base}>{json}</Div>;
+        return <div style={style.base}>{json}</div>;
     }
 }
 NodeViewer.propTypes = {
@@ -57,7 +50,7 @@ class DemoTree extends React.Component {
         this.state = { data };
         this.onToggle = this.onToggle.bind(this);
         this.onArrowClick = this.onArrowClick.bind(this);
-
+        this.onDoubleClick = this.onDoubleClick.bind(this);
     }
 
     onToggle(node) {
@@ -81,6 +74,10 @@ class DemoTree extends React.Component {
         this.setState({ toggled: toggled });
     }
 
+    onDoubleClick(node, toggled) {
+        console.log(node, toggled);
+    }
+
     onFilterMouseUp(e) {
         const filter = e.target.value.trim();
         if (!filter) {
@@ -95,9 +92,9 @@ class DemoTree extends React.Component {
         const { data: stateData, cursor } = this.state;
 
         return (
-            <Div>
-                <Div style={styles.searchBox}>
-                    <Div className="input-group">
+            <div>
+                <div style={styles.searchBox}>
+                    <div className="input-group">
                         <span className="input-group-addon">
                             <i className="fa fa-search" />
                         </span>
@@ -105,18 +102,19 @@ class DemoTree extends React.Component {
                             onKeyUp={this.onFilterMouseUp.bind(this)}
                             placeholder="Search the tree..."
                             type="text" />
-                    </Div>
-                </Div>
-                <Div style={styles.component}>
+                    </div>
+                </div>
+                <div style={styles.component}>
                     <Treebeard data={stateData}
                         decorators={decorators}
                         onToggle={this.onToggle}
-                        onArrowClick={this.onArrowClick} />
-                </Div>
-                <Div style={styles.component}>
+                        onArrowClick={this.onArrowClick}
+                        onDoubleClick={this.onDoubleClick} />
+                </div>
+                <div style={styles.component}>
                     <NodeViewer node={cursor} />
-                </Div>
-            </Div>
+                </div>
+            </div>
         );
     }
 }

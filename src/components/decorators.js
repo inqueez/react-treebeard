@@ -17,10 +17,7 @@ const Toggle = ({ style, onArrowClick }) => {
     const points = `0,0 0,${height} ${width},${midHeight}`;
 
     return (
-        <div className="Arrow" style={style.base} onClick={(e) => {
-            onArrowClick();
-            e.stopPropagation();
-        }}>
+        <div className="Arrow" style={style.base} onClick={onArrowClick}>
             <div style={style.wrapper}>
                 <svg height={height} width={width}>
                     <polygon points={points}
@@ -36,9 +33,9 @@ Toggle.propTypes = {
     onArrowClick: PropTypes.func
 };
 
-const Header = ({ node, style }) => {
+const Header = ({ node, style, onDoubleClick, onClick }) => {
     return (
-        <div style={style.base}>
+        <div style={style.base} onDoubleClick={onDoubleClick} onClick={onClick}>
             <div style={style.title}>
                 {node.name}
             </div>
@@ -47,21 +44,24 @@ const Header = ({ node, style }) => {
 };
 Header.propTypes = {
     style: PropTypes.object,
-    node: PropTypes.object.isRequired
+    node: PropTypes.object.isRequired,
+    onDoubleClick: PropTypes.func,
+    onClick: PropTypes.func
 };
 
 class Container extends React.Component {
     render() {
-        const { style, decorators, terminal, onClick, node } = this.props;
+        const { style, decorators, terminal, onClick, onDoubleClick, node } = this.props;
 
         return (
             <div
-                onClick={onClick}
                 ref={ref => this.clickableRef = ref}
                 style={style.container}>
                 {!terminal ? this.renderToggle() : null}
 
                 <decorators.Header node={node}
+                    onClick={onClick}
+                    onDoubleClick={onDoubleClick}
                     style={style.header} />
             </div>
         );
@@ -95,6 +95,7 @@ Container.propTypes = {
     terminal: PropTypes.bool.isRequired,
     onClick: PropTypes.func.isRequired,
     onArrowClick: PropTypes.func.isRequired,
+    onDoubleClick: PropTypes.func,
     animations: PropTypes.oneOfType([
         PropTypes.object,
         PropTypes.bool

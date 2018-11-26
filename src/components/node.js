@@ -20,6 +20,7 @@ class TreeNode extends React.Component {
 
         this.onClick = this.onClick.bind(this);
         this.onArrowClick = this.onArrowClick.bind(this);
+        this.onDoubleClick = this.onDoubleClick.bind(this);
     }
 
     onClick() {
@@ -36,6 +37,14 @@ class TreeNode extends React.Component {
         const { toggled } = node;
         if (onArrowClick) {
             onArrowClick(node, !toggled);
+        }
+    }
+
+    onDoubleClick() {
+        const { node, onDoubleClick } = this.props;
+        const { toggled } = node;
+        if (onDoubleClick) {
+            onDoubleClick(node, !toggled);
         }
     }
 
@@ -85,7 +94,7 @@ class TreeNode extends React.Component {
             return this.renderChildren(decorators, animations);
         }
 
-        const { animation, duration, ...restAnimationInfo } = animations.drawer;
+        const { ...restAnimationInfo } = animations.drawer;
         return (
             <VelocityTransitionGroup {...restAnimationInfo}
                 ref={ref => this.velocityRef = ref}>
@@ -103,6 +112,7 @@ class TreeNode extends React.Component {
                 node={Object.assign({}, node)}
                 onClick={this.onClick}
                 onArrowClick={this.onArrowClick}
+                onDoubleClick={this.onDoubleClick}
                 style={style} />
         );
     }
@@ -146,10 +156,11 @@ class TreeNode extends React.Component {
     }
 
     _eventBubbles() {
-        const { onToggle, onArrowClick } = this.props;
+        const { onToggle, onArrowClick, onDoubleClick } = this.props;
         return {
             onToggle,
-            onArrowClick
+            onArrowClick,
+            onDoubleClick
         };
     }
 }
@@ -163,7 +174,8 @@ TreeNode.propTypes = {
         PropTypes.bool
     ]).isRequired,
     onToggle: PropTypes.func,
-    onArrowClick: PropTypes.func
+    onArrowClick: PropTypes.func,
+    onDoubleClick: PropTypes.func
 };
 
 export default TreeNode;

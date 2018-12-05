@@ -6,7 +6,7 @@ export default {
         display: 'inline-block',
         verticalAlign: 'top',
         padding: '20px',
-        '@media (max-width: 640px)': {
+        '@media (maxWidth: 640px)': {
             width: '100%',
             display: 'block'
         }

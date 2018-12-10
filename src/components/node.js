@@ -106,6 +106,10 @@ class TreeNode extends React.Component {
     renderHeader(decorators, animations) {
         const { node, style } = this.props;
 
+        if (!node.children && node.type === 'folder') {
+            node.children = [{ name: '(Empty)', key: -1, __virtual: true }];
+        }
+
         return (
             <NodeHeader animations={animations}
                 decorators={decorators}

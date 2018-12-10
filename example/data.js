@@ -20,6 +20,10 @@ export default {
             children: []
         },
         {
+            name: 'of type "folder"',
+            type: 'folder'
+        },
+        {
             name: 'src',
             children: [
                 {

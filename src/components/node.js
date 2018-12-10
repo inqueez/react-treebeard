@@ -76,7 +76,7 @@ class TreeNode extends React.Component {
         const animations = this.animations();
 
         return (
-            <Li innerRef={ref => this.topLevelRef = ref}
+            <Li ref={ref => this.topLevelRef = ref}
                 style={style.base}>
                 {this.renderHeader(decorators, animations)}
 
